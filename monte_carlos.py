@@ -97,7 +97,7 @@ def bfs():
 
 def run():
     breakdown = False
-    counter = 0
+    counter = 1
     while not breakdown:
         update_grid()
         print("Update")
@@ -107,6 +107,7 @@ def run():
             print("\n")
         breakdown = bfs()
         counter += 1
+    print(f"Iterations: {counter}")
 
 if __name__ == "__main__":
     run()
