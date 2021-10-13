@@ -6,38 +6,39 @@ import time
 global p_i, p_b, p_idid, p_idbd, p_bdbd, side, diagonal, func, diameter, grid, grid_temp
 
 #PARAMETERS - Yes I know it's ugly code but easier to use
-p_i = 0.01
-p_b = 0.01
-p_idid = 0.01
-p_idbd = 0.01
-p_bdbd = 0.01
+p_i = 0.1
+p_b = 0.1
+p_idid = 0.1
+p_idbd = 0.1
+p_bdbd = 0.1
 side = 1
 diagonal = False
 func = sum #use sum for SUM, any for OR
-diameter = 5
-grid = [[[False] * diameter] * diameter] * 4 #grid[Z][X][Y]
+diameter = 210
+depth = 4
+grid = [[[False for row in range(diameter)] for col in range(diameter)] for layer in range(depth)]#grid[Z][X][Y]
 grid_temp = deepcopy(grid)
 
 def is_interface(node):
     if side == 1:
-        return node[2] == 3
+        return node[2] == depth-1
     else:
-        return node[2] == 3 or node[2] == 0
+        return node[2] == depth-1 or node[2] == 0
 
 def probability(node): #node = [X,Y,Z]
     """
     node[X, Y, Z]
     """
     global grid_temp
-    xy_pos = np.array(node[:2])
+    xy_pos = np.array(node)
     if diagonal:
-        pos = [[0,1], [0,-1], [1,0], [-1,0], [1,1], [-1,-1], [1,-1], [-1,1]]
+            pos = [[0,1,1], [0,-1,1], [1,0,1], [-1,0,1], [1,1,1], [-1,-1,1], [1,-1,1], [-1,1,1], [0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [1,1,0], [-1,-1,0], [1,-1,0], [-1,1,0], [0,1,-1], [0,-1,-1], [1,0,-1], [-1,0,-1], [1,1,-1], [-1,-1,-1], [1,-1,-1], [-1,1,-1], [0,0,-1]]
     else:
-        pos = [[0,1], [0,-1], [1,0], [-1,0]]
+        pos = [[0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [0,0,-1]]
     n_states = []
     for p in pos:
         temp = xy_pos + np.array(p)
-        if any([x < 0 for x in temp]) or any([x >= diameter for x in temp]):
+        if any(x < 0 for x in temp) or any(x >= diameter for x in temp[:2]) or temp[2] > depth-1:
             continue
         n_states.append(grid_temp[node[2]][temp[0]][node[1]])
 
@@ -51,21 +52,13 @@ def update_grid():
     grid_temp = deepcopy(grid)
     for x in range(diameter):
         for y in range(diameter):
-            for z in range(4):
+            for z in range(depth):
                 if not grid_temp[z][x][y]:
-                    print(x,y,z)
-                    r = random.random()
-                    p = probability([x,y,z])
-                    print(f"r{r}, p{p}")
-                    print(grid[z][x][y])
-                    if (r <= p):
-                        print("True")
-                        grid[z][x][y] = True
-                    print(grid[z][x][y])
+                    grid[z][x][y] = (random.random() <= probability([x,y,z]))
 
 def isin_arr(a, array):
     for arr in array:
-        if a is arr:
+        if (a == arr).all():
             return True
     return False
 
@@ -77,8 +70,10 @@ def bfs():
     visited = []
     for x in range(diameter):
         for y in range(diameter):
-            queue.append(np.array([x,y,3]))
-            visited.append(np.array([x,y,3]))
+            temp = np.array([x,y,depth-1])
+            if grid[temp[2]][temp[0]][temp[1]]:
+                queue.append(temp)
+                visited.append(temp)
     while queue:
         curr = queue.pop()
         if diagonal:
@@ -87,15 +82,13 @@ def bfs():
             pos = [[0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [0,0,-1]]
         for p in pos:
             temp = curr + np.array(p)
-            if isin_arr(temp, visited) or any([x < 0 for x in temp]) or any([x >= diameter for x in temp[:2]]) or temp[2] > 3:
+            if isin_arr(temp, visited) or any(x < 0 for x in temp) or any(x >= diameter for x in temp[:2]) or temp[2] > depth-1:
                 continue
             if grid[temp[2]][temp[0]][temp[1]]:
-                print(temp)
                 if temp[2] == 0:
                     return True
-                else:
-                    queue.append(temp)
-                    visited.append(temp)
+                queue.append(temp)
+                visited.append(temp)
         
     return False
         
@@ -107,13 +100,13 @@ def run():
     counter = 0
     while not breakdown:
         update_grid()
+        print("Update")
         for plane in grid:
             for row in plane:
                 print(row, sep="\n")
             print("\n")
         breakdown = bfs()
         counter += 1
-        time.sleep(3)
 
 if __name__ == "__main__":
     run()
