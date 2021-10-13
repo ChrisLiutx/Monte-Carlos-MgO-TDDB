@@ -2,19 +2,21 @@ from copy import deepcopy
 import random
 import numpy as np
 import time
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
 
 global p_i, p_b, p_idid, p_idbd, p_bdbd, side, diagonal, func, diameter, grid, grid_temp
 
 #PARAMETERS - Yes I know it's ugly code but easier to use
-p_i = 0.1
-p_b = 0.1
-p_idid = 0.1
-p_idbd = 0.1
-p_bdbd = 0.1
+p_i = 0.05
+p_b = 0.05
+p_idid = 0.05
+p_idbd = 0.05
+p_bdbd = 0.05
 side = 1
 diagonal = False
 func = sum #use sum for SUM, any for OR
-diameter = 210
+diameter = 10
 depth = 4
 grid = [[[False for row in range(diameter)] for col in range(diameter)] for layer in range(depth)]#grid[Z][X][Y]
 grid_temp = deepcopy(grid)
@@ -92,8 +94,11 @@ def bfs():
         
     return False
         
+def visualize():
+    ax = plt.figure().add_subplot(projection='3d')
+    ax.voxels(np.array(grid), facecolors='#1f77b430', edgecolor='k', shade=False)
 
-
+    plt.show()
 
 def run():
     breakdown = False
@@ -106,8 +111,10 @@ def run():
                 print(row, sep="\n")
             print("\n")
         breakdown = bfs()
+        visualize()
         counter += 1
     print(f"Iterations: {counter}")
+    
 
 if __name__ == "__main__":
     run()
