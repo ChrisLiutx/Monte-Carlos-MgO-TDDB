@@ -44,23 +44,27 @@ def probability(node): #node = [X,Y,Z]
         pos = [[0,1,1], [0,-1,1], [1,0,1], [-1,0,1], [1,1,1], [-1,-1,1], [1,-1,1], [-1,1,1], [0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [1,1,0], [-1,-1,0], [1,-1,0], [-1,1,0], [0,1,-1], [0,-1,-1], [1,0,-1], [-1,0,-1], [1,1,-1], [-1,-1,-1], [1,-1,-1], [-1,1,-1], [0,0,-1]]
     else:
         pos = [[0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [0,0,-1]]
-    n_states = []
+    n_states_i = []
+    n_states_b = []
     for p in pos:
         temp = xy_pos + np.array(p)
         if any(x < 0 for x in temp) or any(x >= diameter for x in temp[:2]) or temp[2] > depth-1:
             continue
-        n_states.append(grid_temp[temp[2]][temp[0]][temp[1]])
+        if is_interface(temp):
+            n_states_i.append(grid_temp[temp[2]][temp[0]][temp[1]])
+        else:
+            n_states_b.append(grid_temp[temp[2]][temp[0]][temp[1]])
 
     if is_interface(node):
         # print(is_interface(node))
         # print(p_i + p_idid * func(n_states) + p_bdid * func(n_states))
         print(n_states)
         print(func(n_states))
-        return p_i + p_idid * func(n_states) + p_bdid * func(n_states)
+        return p_i + p_idid * func(n_states_i) + p_bdid * func(n_states_b)
     else:
         # print(is_interface(node))
         # print(p_b + p_bdbd * func(n_states) + p_idbd * func(n_states))
-        return p_b + p_bdbd * func(n_states) + p_idbd * func(n_states)
+        return p_b + p_bdbd * func(n_states_i) + p_idbd * func(n_states_b)
 
 def update_grid():
     global grid_temp, grid
