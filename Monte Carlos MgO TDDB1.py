@@ -15,7 +15,7 @@ global p_i, p_b, p_idid, p_idbd, p_bdbd, side, diagonal, func, diameter, grid, g
 p_i = 0.1
 p_b = 0.
 p_idid = 0.
-p_idbd = 0.1
+p_idbd = 0.
 p_bdbd = 0.
 p_bdid = 0.
 side = 2
@@ -40,7 +40,7 @@ def probability(node): #node = [X,Y,Z]
     global grid_temp
     xy_pos = np.array(node)
     if diagonal:
-            pos = [[0,1,1], [0,-1,1], [1,0,1], [-1,0,1], [1,1,1], [-1,-1,1], [1,-1,1], [-1,1,1], [0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [1,1,0], [-1,-1,0], [1,-1,0], [-1,1,0], [0,1,-1], [0,-1,-1], [1,0,-1], [-1,0,-1], [1,1,-1], [-1,-1,-1], [1,-1,-1], [-1,1,-1], [0,0,-1]]
+        pos = [[0,1,1], [0,-1,1], [1,0,1], [-1,0,1], [1,1,1], [-1,-1,1], [1,-1,1], [-1,1,1], [0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [1,1,0], [-1,-1,0], [1,-1,0], [-1,1,0], [0,1,-1], [0,-1,-1], [1,0,-1], [-1,0,-1], [1,1,-1], [-1,-1,-1], [1,-1,-1], [-1,1,-1], [0,0,-1]]
     else:
         pos = [[0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [0,0,-1]]
     n_states = []
@@ -48,7 +48,7 @@ def probability(node): #node = [X,Y,Z]
         temp = xy_pos + np.array(p)
         if any(x < 0 for x in temp) or any(x >= diameter for x in temp[:2]) or temp[2] > depth-1:
             continue
-        n_states.append(grid_temp[node[2]][temp[0]][node[1]])
+        n_states.append(grid_temp[temp[2]][temp[0]][temp[1]])
 
     if is_interface(node):
         # print(is_interface(node))
@@ -116,7 +116,7 @@ def run():
     counter = 1
     while not breakdown:
         update_grid()
-        # print("Update")
+        print("Update")
         # for plane in grid:
             # for row in plane:
                 # print(row, sep="\n")
