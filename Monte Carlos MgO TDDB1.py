@@ -12,6 +12,7 @@ import csv
 global p_i, p_b, p_idid, p_idbd, p_bdbd, side, diagonal, func, diameter, grid, grid_temp
 
 #PARAMETERS - Yes I know it's ugly code but easier to use
+#adafasf
 p_i = 0.1
 p_b = 0.
 p_idid = 0.
