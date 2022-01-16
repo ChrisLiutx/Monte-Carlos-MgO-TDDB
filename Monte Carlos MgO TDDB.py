@@ -58,8 +58,8 @@ def probability(node): #node = [X,Y,Z]
     if is_interface(node):
         # print(is_interface(node))
         # print(p_i + p_idid * func(n_states) + p_bdid * func(n_states))
-        print(n_states)
-        print(func(n_states))
+        # print(n_states)
+        # print(func(n_states))
         return p_i + p_idid * func(n_states_i) + p_bdid * func(n_states_b)
     else:
         # print(is_interface(node))
@@ -108,9 +108,9 @@ def bfs():
                     return True
                 queue.append(temp)
                 visited.append(temp)
-        
+
     return False
-        
+
 def visualize():
     ax = plt.figure().add_subplot(projection='3d')
     ax.voxels(np.array(grid), facecolors='#1f77b430', edgecolor='k', shade=False)
@@ -131,7 +131,7 @@ def run():
         counter += 1
     # print(f"Iterations: {counter}")
     return counter
-    
+
 
 if __name__ == "__main__":
     TTF_array=['diameter='+str(diameter),'depth='+str(depth),'p_id='+str(p_i),'p_bd='+str(p_b),'p_idid='+str(p_idid),'p_idbd='+str(p_idbd),'p_idid='+str(p_bdbd),'side='+str(side),'diagonal='+str(diagonal),'func='+str(func)]
@@ -146,7 +146,7 @@ if __name__ == "__main__":
     #     writer = csv.writer(f)
     #     writer.writerow(TTF_array)
 
-    
+
     """
     to be finished later
     print("Monte Carlos simulation of Magnesium Oxide time dependent dielectric breakdown")
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     # z,x,y = d.nonzero()
     # ax.scatter(x, y, -z, zdir='z', c= 'red', s=100)
     # fig.suptitle('no of defects='+str(np.count_nonzero(d)))
-    
+
 
 else:
     print("Read Documentation")

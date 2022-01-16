@@ -1,0 +1,4 @@
+What are the parameters/ types of systems we're running?
+Diffusion vs filament growth
+hash map wheeee
+what are the types of processes, how it changes, how the kp changes.
