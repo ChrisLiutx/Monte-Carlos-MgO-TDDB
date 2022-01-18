@@ -3,3 +3,13 @@ Diffusion vs filament growth
 hash map wheeee
 what are the types of processes, how it changes, how the kp changes.
 general vs specific algo
+
+defect generation (bond breaking)
+moving to neighboring lattice (diffusion/ drift)
+annihilating itself
+
+3 for bulk and interface each
+
+assume defects influence neighbors, calculate neighboring cell that has defects
+
+diffusion/ drift, 1 process per neighbor?
