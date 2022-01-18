@@ -109,13 +109,13 @@ class Simulation():
         Runs the simulation till completion
         """
         start = timeit.default_timer()
-        visual = Display()
+        # visual = Display()
         print("\n")
         self.generate_process()
         while not (finalnode := bfs(self.grid)): #FIXME: replace condition for ending. Eg: BFS search found path
             self.next_cycle()
-            if self.cycle%100 == 0:
-                print(self.cycle)
+            # if self.cycle%100 == 0:
+            #     print(self.cycle)
             # visual.voxel_visualize(self.grid)
         stop = timeit.default_timer()
         sim_time = convert(stop-start)
@@ -240,8 +240,12 @@ def bfs(tgrid, diagonal=False):
     return False
 
 if __name__ == "__main__":
-    for i in tqdm(range(50)): #Number of times to run simulation
+    start = timeit.default_timer()
+    for i in tqdm(range(100)): #Number of times to run simulation
         sim = Simulation(50,50,5)
         sim.run()
+    stop = timeit.default_timer()
+    total_time = convert(stop-start)
+    print(f"Total time: {total_time}")
 else:
     print("Please read documentation")
