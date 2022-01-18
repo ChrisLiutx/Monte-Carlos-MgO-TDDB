@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import queue as q
 import timeit
+import os
 
 """
 type of node: 0: top interface, 1: bottom interface, 2: bulk
@@ -12,7 +13,16 @@ type of node: 0: top interface, 1: bottom interface, 2: bulk
 2: "diffusion"
 """
 
-k_values = [1,0,0,1,0,0,1,0,0]
+k_values = [2.718281828,0,0,2.718281828,0,0,2.718281828,0,0]
+
+def output(content, filename):
+    cwd = os.path.dirname(__file__)
+    output = cwd + f"/output/{filename}.txt"
+    with open(output, "a") as f:
+        if os.path.isfile(output) and os.path.getsize(output) == 0:
+            f.write("Time to failure, Number of defective sites, Fraction of defect\n")
+        f.write(str(content) + "\n")
+        f.close()
 
 def convert(seconds):
     seconds = seconds % (24 * 3600)
@@ -80,8 +90,20 @@ class Simulation():
                 break
         self.k_total += selected.execute() #Execute selected process
         self.clock -= (np.log(ran2)/self.k_total)
-        print(self.cycle)
     
+    def generate_output(self):
+        #time to failure, number of defective sites at failure, fraction of number of defective sites
+        filename = f"{self.length}x{self.width}x{self.height}_k{k_values[0]}"
+        num_defective = 0
+        for layers in self.grid:
+            for layer in layers:
+                for node in layer:
+                    if node.defect:
+                        num_defective += 1
+        fraction = num_defective/(self.length*self.width*self.height)
+        content = f"{self.clock}, {num_defective}, {fraction}"
+        output(content, filename)
+
     def run(self):
         """
         Runs the simulation till completion
@@ -90,17 +112,17 @@ class Simulation():
         visual = Display()
         print("\n")
         self.generate_process()
-        print(self.k_total)
         while not (finalnode := bfs(self.grid)): #FIXME: replace condition for ending. Eg: BFS search found path
             self.next_cycle()
+            if self.cycle%100 == 0:
+                print(self.cycle)
             # visual.voxel_visualize(self.grid)
         stop = timeit.default_timer()
         sim_time = convert(stop-start)
+        self.generate_output()
         print(f"Simulation took {sim_time}. Cycles: {self.cycle}, Clock: {self.clock}")
-        visual.voxel_visualize(self.grid)
-        visual.show_path(self.grid, finalnode)
-        wait = input("Done.")
-
+        # visual.voxel_visualize(self.grid)
+        # visual.show_path(self.grid, finalnode)
 
 class Node():
     """
@@ -211,7 +233,6 @@ def bfs(tgrid, diagonal=False):
                 continue
             if grid[temp[0]][temp[1]][temp[2]].defect:
                 if temp[2] == 0:
-                    print("Found")
                     return SearchNode(temp, currNode)
                 queue.put(SearchNode(temp, currNode))
                 visited.add(tuple(temp))
@@ -219,8 +240,8 @@ def bfs(tgrid, diagonal=False):
     return False
 
 if __name__ == "__main__":
-    for i in tqdm(range(1)): #Number of times to run simulation
-        sim = Simulation(350,350,5)
+    for i in tqdm(range(50)): #Number of times to run simulation
+        sim = Simulation(50,50,5)
         sim.run()
 else:
     print("Please read documentation")
