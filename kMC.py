@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+@author: Tianxiang Liu
+@contact: mail@chrisliu.io
+"""
 #Imports
 from tqdm import tqdm #progress bar
 import matplotlib.pyplot as plt

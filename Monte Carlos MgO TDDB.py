@@ -1,3 +1,7 @@
+"""
+@author: Tianxiang Liu
+@contact: mail@chrisliu.io
+"""
 from copy import deepcopy
 import random
 import numpy as np
