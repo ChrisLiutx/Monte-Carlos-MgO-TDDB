@@ -251,7 +251,7 @@ def bfs(tgrid, diagonal=False):
 
 if __name__ == "__main__":
     start = timeit.default_timer()
-    k_values = [2.718281828]
+    k_values = [1.648721271, 1.395612425]
     #[2.718281828, 1.648721271, 1.395612425, 1.284025417, 1.221402758, 1.181360413, 1.153564995, 1.133148453, 1.117519069, 1.105170918]
     for k in k_values:
         for i in tqdm(range(100)): #Number of times to run simulation
