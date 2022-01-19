@@ -7,7 +7,7 @@ import os
 from matplotlib import pyplot as plt
 
 cwd = os.path.dirname(__file__)
-output = cwd + "/output/50x50x5_k2.718281828_first50batch.txt"
+output = cwd + "/output/50x50x5_k1.648721271.txt"
 arr = []
 with open(output, "r") as f:
     lines = f.readlines()
@@ -23,7 +23,7 @@ arr = np.sort(arr)
 cumsum = np.cumsum(arr)
 print(cumsum)
 cumsum = cumsum/cumsum[-1]
-print(cumsum)
+print(len(cumsum))
 plt.plot(np.log(arr), np.log(cumsum))
 
 plt.show()

@@ -18,7 +18,7 @@ type of node: 0: top interface, 1: bottom interface, 2: bulk
 2: "diffusion"
 """
 
-k_values = [2.718281828,0,0,2.718281828,0,0,2.718281828,0,0]
+k_values = [1.648721271,0,0,1.648721271,0,0,1.648721271,0,0]
 
 def output(content, filename):
     cwd = os.path.dirname(__file__)
@@ -50,6 +50,7 @@ class Simulation():
         self.clock = 0
         self.cycle = 0
         self.k_total = 0
+        print("Sim Start.")
 
     def generate_nodes(self):
         """
@@ -247,6 +248,7 @@ def bfs(tgrid, diagonal=False):
 if __name__ == "__main__":
     start = timeit.default_timer()
     for i in tqdm(range(100)): #Number of times to run simulation
+        print("\n")
         sim = Simulation(50,50,5)
         sim.run()
     stop = timeit.default_timer()
