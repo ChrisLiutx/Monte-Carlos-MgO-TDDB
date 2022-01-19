@@ -1,5 +1,5 @@
 """
-@author: Tianxiang Liu
+@author: Tianxiang Liu and Joel Tan
 @contact: mail@chrisliu.io
 """
 import numpy as np
