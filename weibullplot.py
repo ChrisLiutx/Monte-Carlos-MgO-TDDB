@@ -21,9 +21,14 @@ arr = np.array(arr)
 
 #arr here is the ttf array unsorted
 
-arr = np.sort(arr)
-cumsum = np.cumsum(arr)
-cumsum = cumsum/cumsum[-1]
-plt.plot(np.log(arr), np.log(cumsum))
+TTF= np.sort(arr)
+F = np.array(range(len(TTF)))
+F = 1-(F/F[-1])
+Weibit = (-np.log10(1-F))
 
+fig = plt.figure()
+ax = fig.add_subplot()
+ax.set_xscale('log')
+ax.set_yscale('log')
+Weibull_plot=ax.plot(TTF,Weibit)
 plt.show()
