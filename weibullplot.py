@@ -24,7 +24,7 @@ arr = np.array(arr)
 TTF= np.sort(arr)
 F = np.array(range(len(TTF)))
 F = ((F-0.3)/(F[-1]+0.4))
-Weibit = np.log10(-np.log10(1-F))
+Weibit = np.log(-np.log(1-F))
 
 fig = plt.figure()
 ax = fig.add_subplot()
