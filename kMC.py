@@ -49,6 +49,7 @@ class Simulation():
         self.cycle = 0
         self.k_total = 0
         self.k_values = [k,0,0,k,0,0,k,0,0]
+        self.num_defect = 0
 
         print("Sim Start.")
 
@@ -93,20 +94,16 @@ class Simulation():
                     break
             if flag:
                 break
-        self.k_total += selected.execute() #Execute selected process
         self.clock -= (np.log(ran2)/self.k_total)
+        if selected.ptype == 0:
+            self.num_defect += 1
+        self.k_total += selected.execute() #Execute selected process
     
     def generate_output(self):
         #time to failure, number of defective sites at failure, fraction of number of defective sites
         filename = f"{self.length}x{self.width}x{self.height}_k{self.k_values[0]}"
-        num_defective = 0
-        for layers in self.grid:
-            for layer in layers:
-                for node in layer:
-                    if node.defect:
-                        num_defective += 1
-        fraction = num_defective/(self.length*self.width*self.height)
-        content = f"{self.clock}, {num_defective}, {fraction}"
+        fraction = self.num_defect/(self.length*self.width*self.height)
+        content = f"{self.clock}, {self.num_defect}, {fraction}"
         output(content, filename)
 
     def run(self):
@@ -154,14 +151,14 @@ class Node():
             temp = Process(node=self, ptype=0, k_values=k_values)
             self.processes.append(temp)
             k_total += temp.kp
-        else:
-            temp = Process(node=self, ptype=1, k_values=k_values)
-            self.processes.append(temp)
-            k_total += temp.kp
-            for i in range(self.num_defect_neighbors):
-                temp = Process(node=self, ptype=2, k_values=k_values)
-                self.processes.append(temp)
-                k_total += temp.kp
+        # else:
+        #     temp = Process(node=self, ptype=1, k_values=k_values)
+        #     self.processes.append(temp)
+        #     k_total += temp.kp
+        #     for i in range(self.num_defect_neighbors):
+        #         temp = Process(node=self, ptype=2, k_values=k_values)
+        #         self.processes.append(temp)
+        #         k_total += temp.kp
         return k_total
 
 class Process(Node):
@@ -213,9 +210,9 @@ class SearchNode():
         self.pos = pos
         self.parent = parent
 
-pos_diag = [[0,1,1], [0,-1,1], [1,0,1], [-1,0,1], [1,1,1], [-1,-1,1], [1,-1,1], [-1,1,1], [0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [1,1,0], [-1,-1,0], [1,-1,0], [-1,1,0], [0,1,-1], [0,-1,-1], [1,0,-1], [-1,0,-1], [1,1,-1], [-1,-1,-1], [1,-1,-1], [-1,1,-1], [0,0,-1]]
+POS_DIAG = [[0,1,1], [0,-1,1], [1,0,1], [-1,0,1], [1,1,1], [-1,-1,1], [1,-1,1], [-1,1,1], [0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [1,1,0], [-1,-1,0], [1,-1,0], [-1,1,0], [0,1,-1], [0,-1,-1], [1,0,-1], [-1,0,-1], [1,1,-1], [-1,-1,-1], [1,-1,-1], [-1,1,-1], [0,0,-1]]
 
-pos_no_diag = [[0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [0,0,-1]]
+POS_NOT_DIAG = [[0,0,1], [0,1,0], [0,-1,0], [1,0,0], [-1,0,0], [0,0,-1]]
 
 def bfs(tgrid, diagonal=False):
     """
@@ -237,9 +234,9 @@ def bfs(tgrid, diagonal=False):
         currNode = queue.get()
         curr = currNode.pos
         if diagonal:
-            pos = pos_diag
+            pos = POS_DIAG
         else:
-            pos = pos_no_diag
+            pos = POS_NOT_DIAG
         for p in pos:
             temp = curr + np.array(p)
             if tuple(temp) in visited or any(x < 0 for x in temp) or temp[0] > length-1 or temp[1] > width-1 or temp[2] > height-1:
@@ -254,11 +251,12 @@ def bfs(tgrid, diagonal=False):
 
 if __name__ == "__main__":
     start = timeit.default_timer()
-    k_values = [1.395612425, 1.284025417, 1.221402758, 1.181360413, 1.153564995, 1.133148453, 1.117519069, 1.105170918]
+    k_values = [2.718281828]
+    #[2.718281828, 1.648721271, 1.395612425, 1.284025417, 1.221402758, 1.181360413, 1.153564995, 1.133148453, 1.117519069, 1.105170918]
     for k in k_values:
         for i in tqdm(range(100)): #Number of times to run simulation
             print("\n")
-            sim = Simulation(50,50,5)
+            sim = Simulation(50,50,5, k)
             sim.run()
     stop = timeit.default_timer()
     total_time = convert(stop-start)

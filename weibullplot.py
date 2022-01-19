@@ -7,7 +7,7 @@ import os
 from matplotlib import pyplot as plt
 
 cwd = os.path.dirname(__file__)
-output = cwd + "/output/" + "50x50x5_k1.648721271.txt"
+output = cwd + "/output/" + "50x50x5_k2.718281828.txt"
 arr = []
 with open(output, "r") as f:
     lines = f.readlines()
@@ -23,12 +23,12 @@ arr = np.array(arr)
 
 TTF= np.sort(arr)
 F = np.array(range(len(TTF)))
-F = 1-(F/F[-1])
-Weibit = (-np.log10(1-F))
+F = (F/F[-1])
+Weibit = np.log10(-np.log10(1-F))
 
 fig = plt.figure()
 ax = fig.add_subplot()
 ax.set_xscale('log')
-ax.set_yscale('log')
-Weibull_plot=ax.plot(TTF,Weibit)
+# ax.set_yscale('log')
+Weibull_plot=ax.plot(TTF[1:-1],Weibit[1:-1])
 plt.show()
