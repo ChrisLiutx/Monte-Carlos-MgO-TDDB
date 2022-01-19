@@ -18,8 +18,6 @@ type of node: 0: top interface, 1: bottom interface, 2: bulk
 2: "diffusion"
 """
 
-k_values = [1.648721271,0,0,1.648721271,0,0,1.648721271,0,0]
-
 def output(content, filename):
     cwd = os.path.dirname(__file__)
     output = cwd + f"/output/{filename}.txt"
@@ -42,7 +40,7 @@ class Simulation():
     """
     Simulation class
     """
-    def __init__(self, length=None, width=None, height=None):
+    def __init__(self, length=None, width=None, height=None, k=1):
         self.length = length
         self.width = width
         self.height = height
@@ -50,6 +48,8 @@ class Simulation():
         self.clock = 0
         self.cycle = 0
         self.k_total = 0
+        self.k_values = [k,0,0,k,0,0,k,0,0]
+
         print("Sim Start.")
 
     def generate_nodes(self):
@@ -65,8 +65,7 @@ class Simulation():
         for layers in self.grid:
             for layer in layers:
                 for node in layer:
-                    for p in node.generate_process():
-                        self.k_total += p.kp
+                    self.k_total += node.generate_process(self.k_values)
 
     def next_cycle(self):
         """
@@ -99,7 +98,7 @@ class Simulation():
     
     def generate_output(self):
         #time to failure, number of defective sites at failure, fraction of number of defective sites
-        filename = f"{self.length}x{self.width}x{self.height}_k{k_values[0]}"
+        filename = f"{self.length}x{self.width}x{self.height}_k{self.k_values[0]}"
         num_defective = 0
         for layers in self.grid:
             for layer in layers:
@@ -148,25 +147,33 @@ class Node():
         self.defect = False
         self.num_defect_neighbors = 0
     
-    def generate_process(self):
+    def generate_process(self, k_values=[1,0,0,1,0,0,1,0,0]):
         self.processes = []
+        k_total = 0
         if not self.defect:
-            self.processes.append(Process(node=self, ptype=0))
+            temp = Process(node=self, ptype=0, k_values=k_values)
+            self.processes.append(temp)
+            k_total += temp.kp
         else:
-            self.processes.append(Process(node=self, ptype=1))
+            temp = Process(node=self, ptype=1, k_values=k_values)
+            self.processes.append(temp)
+            k_total += temp.kp
             for i in range(self.num_defect_neighbors):
-                self.processes.append(Process(node=self, ptype=2))
-        return self.processes
+                temp = Process(node=self, ptype=2, k_values=k_values)
+                self.processes.append(temp)
+                k_total += temp.kp
+        return k_total
 
 class Process(Node):
     """
     Process Class
     """
-    def __init__(self, node=None, ptype=None, alpha=1, to_node=None): #FIXME Figure out how kp is determined
+    def __init__(self, node=None, ptype=None, alpha=1, to_node=None, k_values=[1,0,0,1,0,0,1,0,0]): #FIXME Figure out how kp is determined
         self.node = node
         #kp to be determined
         self.ptype = ptype
-        self.kp = k_values[self.node.nodetype * 3 + self.ptype]
+        self.k_values=k_values
+        self.kp = self.k_values[self.node.nodetype * 3 + self.ptype]
 
     def execute(self): #FIXME Remember to do this
         if self.ptype == 0:
@@ -247,10 +254,12 @@ def bfs(tgrid, diagonal=False):
 
 if __name__ == "__main__":
     start = timeit.default_timer()
-    for i in tqdm(range(100)): #Number of times to run simulation
-        print("\n")
-        sim = Simulation(50,50,5)
-        sim.run()
+    k_values = [1.395612425, 1.284025417, 1.221402758, 1.181360413, 1.153564995, 1.133148453, 1.117519069, 1.105170918]
+    for k in k_values:
+        for i in tqdm(range(100)): #Number of times to run simulation
+            print("\n")
+            sim = Simulation(50,50,5)
+            sim.run()
     stop = timeit.default_timer()
     total_time = convert(stop-start)
     print(f"Total time: {total_time}")
