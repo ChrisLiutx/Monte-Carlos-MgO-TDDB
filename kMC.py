@@ -20,7 +20,7 @@ k_values = [top generation, top annihilation, top diffusion, bottom generation, 
 """
 
 def output(content, filename):
-    cwd = os.path.dirname(__file__)
+    cwd = os.path.dirname(os.path.abspath(__file__))
     output = cwd + f"/output/interface_multiple/{filename}.txt"
     with open(output, "a") as f:
         if os.path.isfile(output) and os.path.getsize(output) == 0:
