@@ -7,7 +7,7 @@ import os
 from matplotlib import pyplot as plt
 
 cwd = os.path.dirname(__file__)
-output = cwd + "/output/" + "50x50x5_k2.718281828.txt"
+output = cwd + "/output/" + "50x50x5_k1.395612425.txt"
 arr = []
 with open(output, "r") as f:
     lines = f.readlines()

@@ -16,11 +16,12 @@ type of node: 0: top interface, 1: bottom interface, 2: bulk
 0: "generation"
 1: "annihilation"
 2: "diffusion"
+k_values = [top generation, top annihilation, top diffusion, bottom generation, bottom annihilation, bottom diffusion, bulk generation, bulk annihilation, bulk diffusion]
 """
 
 def output(content, filename):
     cwd = os.path.dirname(__file__)
-    output = cwd + f"/output/{filename}.txt"
+    output = cwd + f"/output/interface_multiple/{filename}.txt"
     with open(output, "a") as f:
         if os.path.isfile(output) and os.path.getsize(output) == 0:
             f.write("Time to failure, Number of defective sites, Fraction of defect\n")
@@ -40,7 +41,7 @@ class Simulation():
     """
     Simulation class
     """
-    def __init__(self, length=None, width=None, height=None, k=1):
+    def __init__(self, length=None, width=None, height=None, k_values=1):
         self.length = length
         self.width = width
         self.height = height
@@ -48,7 +49,7 @@ class Simulation():
         self.clock = 0
         self.cycle = 0
         self.k_total = 0
-        self.k_values = [k,0,0,k,0,0,k,0,0]
+        self.k_values = k_values
         self.num_defect = 0
 
         print("Sim Start.")
@@ -251,12 +252,15 @@ def bfs(tgrid, diagonal=False):
 
 if __name__ == "__main__":
     start = timeit.default_timer()
-    k_values = [1.648721271, 1.395612425]
+    # k_values = [1.648721271, 1.395612425]
     #[2.718281828, 1.648721271, 1.395612425, 1.284025417, 1.221402758, 1.181360413, 1.153564995, 1.133148453, 1.117519069, 1.105170918]
-    for k in k_values:
+    # for k in k_values:
+    alpha = [1.5, 2.0, 2.5]
+    for a in alpha:
+        k_values = [2.718281828*a,0,0,2.718281828*a,0,0,2.718281828,0,0]
         for i in tqdm(range(100)): #Number of times to run simulation
             print("\n")
-            sim = Simulation(50,50,5, k)
+            sim = Simulation(50,50,5, k_values)
             sim.run()
     stop = timeit.default_timer()
     total_time = convert(stop-start)
