@@ -102,7 +102,7 @@ class Simulation():
     
     def generate_output(self):
         #time to failure, number of defective sites at failure, fraction of number of defective sites
-        filename = f"{self.length}x{self.width}x{self.height}_k{self.k_values[0]}"
+        filename = f"{self.length}x{self.width}x{self.height}_ktop{self.k_values[0]}_kbot{self.k_values[1]}_kb{self.k_values[2]}"
         fraction = self.num_defect/(self.length*self.width*self.height)
         content = f"{self.clock}, {self.num_defect}, {fraction}"
         output(content, filename)
