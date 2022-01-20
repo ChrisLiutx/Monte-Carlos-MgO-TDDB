@@ -1,0 +1,3 @@
+top = bot interface
+k for interface = A * k_bulk
+A = [1.5, 2.0, 2.5]
