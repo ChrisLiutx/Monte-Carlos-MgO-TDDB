@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 @author: Tianxiang Liu and Joel Tan
 @contact: mail@chrisliu.io
