@@ -7,29 +7,39 @@ import numpy as np
 import os
 from matplotlib import pyplot as plt
 
-cwd = os.path.dirname(__file__)
-output = cwd + "/output/" + "50x50x5_k1.395612425.txt"
-arr = []
-with open(output, "r") as f:
-    lines = f.readlines()
-    flag = False
-    for line in lines:
-        if flag:
-            arr.append(float(line.split(',')[0]))
-        else:
-            flag = True
-arr = np.array(arr)
+def plotter(filename):
+    cwd = os.path.dirname(__file__)
+    output = cwd + "/output/" + str(filename) + ".txt"
+    arr = []
+    with open(output, "r") as f:
+        lines = f.readlines()
+        flag = False
+        for line in lines:
+            if flag:
+                arr.append(float(line.split(',')[0]))
+            else:
+                flag = True
+    arr = np.array(arr)
+    return arr
 
 #arr here is the ttf array unsorted
-
-TTF= np.sort(arr)
-F = np.array(range(len(TTF)))
-F = ((F-0.3)/(F[-1]+0.4))
-Weibit = np.log(-np.log(1-F))
-
 fig = plt.figure()
 ax = fig.add_subplot()
 ax.set_xscale('log')
-# ax.set_yscale('log')
-Weibull_plot=ax.plot(TTF,Weibit)
+def TTFplot(arr, label):
+    TTF= np.sort(arr)
+    F = np.array(range(len(TTF)))
+    F = ((F-0.3)/(F[-1]+0.4))
+    Weibit = np.log(-np.log(1-F))
+    
+    # ax.set_yscale('log')
+    Weibull_plot=ax.plot(TTF,Weibit, label=f"Data: {label}")
+
+files = ["50x50x5_ktop4.0774227419999995_kbot4.0774227419999995_kb2.718281828", "50x50x5_ktop5.436563656_kbot5.436563656_kb2.718281828", "50x50x5_ktop6.79570457_kbot6.79570457_kb2.718281828"]
+
+for file in files:
+    arr = plotter("interface_multiple/"+file)
+    TTFplot(arr, file)
+    plt.pause(1)
+plt.legend()
 plt.show()

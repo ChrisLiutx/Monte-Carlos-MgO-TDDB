@@ -7,29 +7,33 @@ import numpy as np
 import os
 from matplotlib import pyplot as plt
 
-cwd = os.path.dirname(__file__)
-output = cwd + "/output/" + "50x50x5_k1.395612425.txt"
-arr = []
-with open(output, "r") as f:
-    lines = f.readlines()
-    flag = False
-    for line in lines:
-        if flag:
-            arr.append(float(line.split(',')[0]))
-        else:
-            flag = True
-arr = np.array(arr)
+def plotter(filename):
+    cwd = os.path.dirname(__file__)
+    output = cwd + "/output/" + str(filename) + ".txt"
+    arr = []
+    with open(output, "r") as f:
+        lines = f.readlines()
+        flag = False
+        for line in lines:
+            if flag:
+                arr.append(float(line.split(',')[0]))
+            else:
+                flag = True
+    arr = np.array(arr)
+    return arr
 
 #arr here is the ttf array unsorted
-def cdfplot(arr, num):
+def cdfplot(arr, label):
     arr = np.sort(arr)
     cumsum = np.cumsum(arr)
     cumsum = cumsum/cumsum[-1]
-    plt.plot(np.log(arr), np.log(cumsum), label=f"Num DP: {num}")
+    plt.plot(np.log(arr), np.log(cumsum), label=f"Data: {label}")
 
+files = ["50x50x5_k2.718281828", "50x50x5_k1.648721271", "50x50x5_k1.395612425"]
 
-for i in range(50, len(arr)+1, 50):
-    cdfplot(arr[:i+1], i)
+for file in files:
+    arr = plotter(file)
+    cdfplot(arr, file)
     plt.pause(1)
 plt.legend()
 plt.show()
