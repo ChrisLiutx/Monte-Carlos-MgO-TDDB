@@ -113,7 +113,6 @@ class Simulation():
         """
         start = timeit.default_timer()
         # visual = Display()
-        print("\n")
         self.generate_process()
         while not (finalnode := bfs(self.grid)): #FIXME: replace condition for ending. Eg: BFS search found path
             self.next_cycle()
@@ -255,7 +254,7 @@ if __name__ == "__main__":
     # k_values = [1.648721271, 1.395612425]
     #[2.718281828, 1.648721271, 1.395612425, 1.284025417, 1.221402758, 1.181360413, 1.153564995, 1.133148453, 1.117519069, 1.105170918]
     # for k in k_values:
-    alpha = [1.5, 2.0, 2.5]
+    alpha = np.arange(3.0, 6.0, 0.5)
     for a in alpha:
         k_values = [2.718281828*a,0,0,2.718281828*a,0,0,2.718281828,0,0]
         for i in tqdm(range(100)): #Number of times to run simulation
