@@ -55,7 +55,7 @@ def TTFplot(export, arr, label):
     x_line = x
     y_line = objective(x_line, gradient, y_intercept)
     Weibull_plot=ax.plot(np.exp(x_line), y_line, '--', color='red')
-    export.append([label,gradient[0],x_intercept[0]])
+    export.append([label,gradient[0],np.exp(x_intercept[0])])
     return export
 
 files = ["50x50x5_ktop4.0774227419999995_kbot4.0774227419999995_kb2.718281828", "50x50x5_ktop5.436563656_kbot5.436563656_kb2.718281828", "50x50x5_ktop6.79570457_kbot6.79570457_kb2.718281828", "50x50x5_ktop8.154845483999999_kbot8.154845483999999_kb2.718281828", "50x50x5_ktop9.513986398_kbot9.513986398_kb2.718281828", "50x50x5_ktop10.873127312_kbot10.873127312_kb2.718281828", "50x50x5_ktop12.232268225999999_kbot12.232268225999999_kb2.718281828", "50x50x5_ktop13.59140914_kbot13.59140914_kb2.718281828", "50x50x5_ktop14.950550053999999_kbot14.950550053999999_kb2.718281828"]
