@@ -254,7 +254,7 @@ if __name__ == "__main__":
     # k_values = [1.648721271, 1.395612425]
     #[2.718281828, 1.648721271, 1.395612425, 1.284025417, 1.221402758, 1.181360413, 1.153564995, 1.133148453, 1.117519069, 1.105170918]
     # for k in k_values:
-    alpha = np.arange(1.5, 6.0, 0.5)
+    alpha = np.arange(6.0, 20.0, 1)
     for a in alpha:
         k_values = [2.718281828*a,0,0,2.718281828*a,0,0,2.718281828,0,0]
         for i in tqdm(range(100)): #Number of times to run simulation
