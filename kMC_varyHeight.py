@@ -21,7 +21,7 @@ k_values = [top generation, top annihilation, top diffusion, bottom generation, 
 
 def output(content, filename):
     cwd = os.path.dirname(os.path.abspath(__file__))
-    output = cwd + f"/output/diagonals/varyHeight/{filename}.txt"
+    output = cwd + f"/output/diagonals/varyHeight_endpath_true/{filename}.txt"
     with open(output, "a") as f:
         if os.path.isfile(output) and os.path.getsize(output) == 0:
             f.write("Time to failure, Number of defective sites, Fraction of defect\n")
@@ -263,7 +263,7 @@ if __name__ == "__main__":
             for i in tqdm(range(100)): #Number of times to run simulation
                 print("\n")
                 sim = Simulation(50,50, height, k, a)
-                sim.run(display=False, end_path=False)
+                sim.run(display=False, end_path=True)
     stop = timeit.default_timer()
     total_time = convert(stop-start)
     print(f"Total time: {total_time}")
