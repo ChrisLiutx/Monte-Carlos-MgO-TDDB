@@ -1,0 +1,2 @@
+Time to failure, Number of defective sites, Fraction of defect
+0.02492093355064847, 1503, 0.0668

@@ -10,6 +10,7 @@ import numpy as np
 import queue as q
 import timeit
 import os
+import pandas as pd
 
 """
 type of node: 0: top interface, 1: bottom interface, 2: bulk
@@ -19,9 +20,10 @@ type of node: 0: top interface, 1: bottom interface, 2: bulk
 k_values = [top generation, top annihilation, top diffusion, bottom generation, bottom annihilation, bottom diffusion, bulk generation, bulk annihilation, bulk diffusion]
 """
 
+output_dir = '/output/diagonals/test/'
 def output(content, filename):
     cwd = os.path.dirname(os.path.abspath(__file__))
-    output = cwd + f"/output/diagonals/varyHeight_endpath_true/{filename}.txt"
+    output = cwd + output_dir + f"{filename}.txt"
     with open(output, "a") as f:
         if os.path.isfile(output) and os.path.getsize(output) == 0:
             f.write("Time to failure, Number of defective sites, Fraction of defect\n")
@@ -108,7 +110,7 @@ class Simulation():
         content = f"{self.clock}, {self.num_defect}, {fraction}"
         output(content, filename)
 
-    def run(self, display=False, end_path=False):
+    def run(self, display=False, end_path=False, save_defect_data=False):
         """
         Runs the simulation till completion
         """
@@ -119,13 +121,14 @@ class Simulation():
             self.next_cycle()
             # if self.cycle%100 == 0:
             #     print(self.cycle)
-            if display: visual.voxel_visualize(self.grid)
+            # if display: visual.voxel_visualize(self.grid)
         stop = timeit.default_timer()
         sim_time = convert(stop-start)
         self.generate_output()
         print(f"Simulation took {sim_time}. Cycles: {self.cycle}, Clock: {self.clock}")
         if display: visual.voxel_visualize(self.grid)
         if end_path: visual.show_path(self.grid, finalnode)
+        if save_defect_data: visual.save_defect_data(self.grid, finalnode)
 
 class Node():
     """
@@ -194,7 +197,7 @@ class Display():
         """
         self.grid = [[[node.defect for node in layer]for layer in layers] for layers in tgrid]
         self.ax.clear()
-        self.ax.voxels(np.array(self.grid), facecolors='#1f77b430', edgecolor='k', shade=False)
+        self.ax.voxels(np.array(self.grid), facecolors='#0377b430', edgecolor=None, shade=False)
         plt.pause(1)
     
     def show_path(self, tgrid, finalnode):
@@ -205,6 +208,23 @@ class Display():
             finalnode = finalnode.parent
         self.ax.voxels(np.array(pathgrid), facecolors='#FF000080', edgecolor='k', shade=False)
         plt.show()
+    
+    
+    def save_defect_data(self, tgrid, finalnode):
+        ###consider shifting this function to a more suitable class
+        defect_indices = np.where(self.grid)
+        pathgrid = [[[False for node in layer]for layer in layers] for layers in tgrid]
+        while finalnode != None:
+            pos = finalnode.pos
+            pathgrid[pos[0]][pos[1]][pos[2]] = True
+            finalnode = finalnode.parent
+        path_indices = np.where(pathgrid)
+        # column_name=['x','y','z','no of defects','path_x','path_y','path_z']
+        export={'x': list(defect_indices[0]),'y': list(defect_indices[1]),'z': list(defect_indices[2]), 'path_x': list(path_indices[0]), 'path_y': list(path_indices[1]), 'path_z': list(path_indices[2])}
+        df = pd.DataFrame({ key:pd.Series(value) for key, value in export.items() })
+        cwd = os.path.dirname(os.path.abspath(__file__))
+        output_filename = cwd + output_dir + f'No_of_defects_location_and_path_location{i}.xlsx' #consider making naming convention better
+        df.to_excel(output_filename,index=False)
 
 class SearchNode():
     def __init__(self, pos, parent=None):
@@ -263,7 +283,7 @@ if __name__ == "__main__":
             for i in tqdm(range(100)): #Number of times to run simulation
                 print("\n")
                 sim = Simulation(50,50, height, k, a)
-                sim.run(display=False, end_path=True)
+                sim.run(display=True, end_path=True, save_defect_data=True)
     stop = timeit.default_timer()
     total_time = convert(stop-start)
     print(f"Total time: {total_time}")
