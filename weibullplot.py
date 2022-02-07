@@ -8,10 +8,8 @@ import os
 from matplotlib import pyplot as plt
 
 def plotter(filename):
-    cwd = os.path.dirname(__file__)
-    output = cwd + "/output/" + str(filename) + ".txt"
     arr = []
-    with open(output, "r") as f:
+    with open(filename, "r") as f:
         lines = f.readlines()
         flag = False
         for line in lines:
@@ -35,11 +33,14 @@ def TTFplot(arr, label):
     # ax.set_yscale('log')
     Weibull_plot=ax.plot(TTF,Weibit, label=f"Data: {label}")
 
-files = ["50x50x5_ktop4.0774227419999995_kbot4.0774227419999995_kb2.718281828", "50x50x5_ktop5.436563656_kbot5.436563656_kb2.718281828", "50x50x5_ktop6.79570457_kbot6.79570457_kb2.718281828", "50x50x5_ktop8.154845483999999_kbot8.154845483999999_kb2.718281828", "50x50x5_ktop9.513986398_kbot9.513986398_kb2.718281828", "50x50x5_ktop10.873127312_kbot10.873127312_kb2.718281828", "50x50x5_ktop12.232268225999999_kbot12.232268225999999_kb2.718281828", "50x50x5_ktop13.59140914_kbot13.59140914_kb2.718281828", "50x50x5_ktop14.950550053999999_kbot14.950550053999999_kb2.718281828"]
+cwd = os.path.dirname(__file__)
+location = cwd+"/output/diagonals/varyHeight/"
+
+files = [location+str(f) for f in os.listdir(location) if f.endswith(".txt") and f[-5]=="5"]
 
 for file in files:
-    arr = plotter("interface_multiple/"+file)
-    TTFplot(arr, file)
+    arr = plotter(file)
+    TTFplot(arr, file.split('/')[-1])
     plt.pause(1)
 plt.legend()
 plt.show()
