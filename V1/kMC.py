@@ -34,7 +34,7 @@ def convert(seconds):
     seconds %= 3600
     minutes = seconds // 60
     seconds %= 60
-      
+
     return "%d:%02d:%02d" % (hour, minutes, seconds)
 
 class Simulation():
@@ -100,7 +100,7 @@ class Simulation():
         if selected.ptype == 0:
             self.num_defect += 1
         self.k_total += selected.execute() #Execute selected process
-    
+
     def generate_output(self):
         #time to failure, number of defective sites at failure, fraction of number of defective sites
         filename = f"{self.length}x{self.width}x{self.height}_k{self.k_values[6]}_alpha{self.alpha}"
@@ -119,7 +119,7 @@ class Simulation():
             self.next_cycle()
             # if self.cycle%100 == 0:
             #     print(self.cycle)
-            if display: visual.voxel_visualize(self.grid)
+            # if display: visual.voxel_visualize(self.grid)
         stop = timeit.default_timer()
         sim_time = convert(stop-start)
         self.generate_output()
@@ -144,7 +144,7 @@ class Node():
             self.nodetype = 2
         self.defect = False
         self.num_defect_neighbors = 0
-    
+
     def generate_process(self, k_values=[1,0,0,1,0,0,1,0,0]):
         self.processes = []
         k_total = 0
@@ -193,10 +193,11 @@ class Display():
         Voxel visualization, might consider using grid view later
         """
         self.grid = [[[node.defect for node in layer]for layer in layers] for layers in tgrid]
+
         self.ax.clear()
         self.ax.voxels(np.array(self.grid), facecolors='#1f77b430', edgecolor='k', shade=False)
         plt.pause(1)
-    
+
     def show_path(self, tgrid, finalnode):
         pathgrid = [[[False for node in layer]for layer in layers] for layers in tgrid]
         while finalnode != None:
@@ -255,14 +256,14 @@ if __name__ == "__main__":
     # k_values = [1.648721271, 1.395612425]
     #[2.718281828, 1.648721271, 1.395612425, 1.284025417, 1.221402758, 1.181360413, 1.153564995, 1.133148453, 1.117519069, 1.105170918]
     # for k in k_values:
-    alpha = [1] + list(range(5, 21, 5))
+    alpha = [5]
     k=2.718281828
     height = 5
     for a in alpha:
-        for i in tqdm(range(100)): #Number of times to run simulation
+        for i in tqdm(range(1)): #Number of times to run simulation
             print("\n")
             sim = Simulation(50,50, height, k, a)
-            sim.run(display=False, end_path=False)
+            sim.run(display=True, end_path=True)
     stop = timeit.default_timer()
     total_time = convert(stop-start)
     print(f"Total time: {total_time}")

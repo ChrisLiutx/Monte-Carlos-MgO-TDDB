@@ -24,6 +24,8 @@ class Simulation():
         self.height = height
         self.nodes = {}
         self.parent_map = {}
+        self.group_reached_top = dict()
+        self.group_reached_bottom = dict()
         self.clock = 0
         self.cycle = 0
         self.k_total = 0
@@ -70,32 +72,37 @@ class Simulation():
         self.k_total += selected.execute()
         return selected.parent_node.coord
 
-                    
     def unionSearch(self, coord, diagonal=True):
-
         def isValid(coord):
             return all(i >= 0 for i in coord) and coord[0]<self.length and coord[1]<self.width and coord[2]<self.height
-        
+
         def find(coord):
             if coord in self.parent_map:
                 parent_coord = self.parent_map[coord]
-                if parent_coord[0] == -1:
-                    return tuple(coord, parent_coord[1], parent_coord[2])
-                return find(parent_coord[0])
+                if parent_coord == (-1, -1, -1):
+                    return coord
             return None
-
+        
         def union(coord1, coord2):
             parent_coord1 = find(coord1)
             parent_coord2 = find(coord2)
             if parent_coord1 is not None and parent_coord2 is not None:
-                self.parent_map[parent_coord1[0]] = tuple(parent_coord2[0], None, None)
-                self.parent_map[parent_coord2[0]] = tuple(-1, parent_coord1[1] or parent_coord2[1], parent_coord1[2] or parent_coord2[2])
-            return parent_coord2[0]
-
+                self.parent_map[parent_coord1] = parent_coord2
+                self.group_reached_top[parent_coord1] = self.group_reached_top[parent_coord1] or self.group_reached_top[parent_coord2]
+                self.group_reached_bottom[parent_coord1] = self.group_reached_bottom[parent_coord1] or self.group_reached_bottom[parent_coord2]
+                # path compression
+                self.parent_map[coord1] = parent_coord2
+                self.group_reached_top[coord1] = self.group_reached_top[parent_coord1] or self.group_reached_top[parent_coord2]
+                self.group_reached_bottom[coord1] = self.group_reached_bottom[parent_coord1] or self.group_reached_bottom[parent_coord2]
+                return self.group_reached_top[coord1] and self.group_reached_bottom[coord1]
+            return False
+            
         reached_bottom = (coord[2] == 0)
         reached_top = (coord[2] == self.height-1)
-        self.parent_map[coord] = tuple(-1, reached_bottom, reached_top)
-        
+        self.parent_map[coord] = (-1, -1, -1) 
+        self.group_reached_top[coord] = reached_top
+        self.group_reached_bottom[coord] = reached_bottom
+
         if diagonal:
             pos = POS_DIAG
         else:
@@ -109,11 +116,8 @@ class Simulation():
 
         for n in neighbors:
             if n in self.parent_map:
-                coord = union(coord, n)
-        
-        temp = find(coord)
-        if temp[1] and temp[2]:
-            return coord
+                if (union(coord, n))
+                    return coord
         return None
         
     def run(self, end_path=False, save_defect_data=False):
