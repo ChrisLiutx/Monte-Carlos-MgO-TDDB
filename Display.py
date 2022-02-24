@@ -10,7 +10,7 @@ import numpy as np
 class Display():
     def __init__(self):
         self.ax = plt.figure().add_subplot(projection="3d")
-        self.ax.set_box_aspect(aspect=(1,1,1))
+        self.ax.set_box_aspect(aspect=(10,10,1))
 
     def voxel_visualize(self, nodes, length, width, height):
         """
@@ -23,7 +23,7 @@ class Display():
 
         self.ax.clear()
         self.ax.voxels(np.array(self.grid), facecolors='#0277b430', edgecolor='k', shade=False)
-        plt.pause(0.5)
+        plt.pause(0.01)
 
     def show_path(self, tgrid, finalnode):
         pathgrid = [[[False for node in layer]for layer in layers] for layers in tgrid]

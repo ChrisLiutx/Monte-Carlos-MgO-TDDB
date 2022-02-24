@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """
 @author: Tianxiang Liu
@@ -25,6 +26,7 @@ class Simulation():
         self.height = height
         self.nodes = {} #Maps coord (L,W,H) to Node
         self.parent_map = {}
+        self.defect_set = set()
         self.group_reached_top = dict()
         self.group_reached_bottom = dict()
         self.clock = 0
@@ -34,7 +36,7 @@ class Simulation():
         self.alpha = alpha
         self.num_defect = 0
         self.generate_nodes()
-        print("Simulation initialized...")
+        print("\nSimulation initialized...")
 
     def generate_nodes(self):
         """
@@ -78,46 +80,36 @@ class Simulation():
             return all(i >= 0 for i in coord) and coord[0]<self.length and coord[1]<self.width and coord[2]<self.height
 
         def find(coord):
-            if coord in self.parent_map:
-                parent_coord = self.parent_map[coord]
-                if parent_coord == (-1, -1, -1):
-                    return coord
-            return None
+            parent_coord = self.parent_map[coord]
+            if parent_coord == (-1, -1, -1):
+                return coord
+            self.parent_map[coord] = find(parent_coord)
+            return self.parent_map[coord]
         
         def union(coord1, coord2):
             parent_coord1 = find(coord1)
             parent_coord2 = find(coord2)
-            if parent_coord1 is not None and parent_coord2 is not None:
+
+            if (parent_coord1 != parent_coord2):
                 self.parent_map[parent_coord1] = parent_coord2
-                self.group_reached_top[parent_coord1] = self.group_reached_top[parent_coord1] or self.group_reached_top[parent_coord2]
-                self.group_reached_bottom[parent_coord1] = self.group_reached_bottom[parent_coord1] or self.group_reached_bottom[parent_coord2]
-                # path compression
-                self.parent_map[coord1] = parent_coord2
-                self.group_reached_top[coord1] = self.group_reached_top[parent_coord1] or self.group_reached_top[parent_coord2]
-                self.group_reached_bottom[coord1] = self.group_reached_bottom[parent_coord1] or self.group_reached_bottom[parent_coord2]
-                return self.group_reached_top[coord1] and self.group_reached_bottom[coord1]
-            return False
+                self.group_reached_top[parent_coord2] = self.group_reached_top[parent_coord1] or self.group_reached_top[parent_coord2]
+                self.group_reached_bottom[parent_coord2] = self.group_reached_bottom[parent_coord1] or self.group_reached_bottom[parent_coord2]
+            return self.group_reached_top[parent_coord2] and self.group_reached_bottom[parent_coord2]
             
         reached_bottom = (coord[2] == 0)
         reached_top = (coord[2] == self.height-1)
-        self.parent_map[coord] = (-1, -1, -1) 
+        self.parent_map[coord] = (-1, -1, -1)
         self.group_reached_top[coord] = reached_top
         self.group_reached_bottom[coord] = reached_bottom
-
+        self.defect_set.add(coord)
         if diagonal:
             pos = POS_DIAG
         else:
             pos = POS_NOT_DIAG
 
-        neighbors = []
         for p in pos:
             temp_coord = tuple(sum(t) for t in zip(p, coord))
-            if isValid(temp_coord):
-                neighbors.append(temp_coord)
-
-        for n in neighbors:
-            if n in self.parent_map:
-                if (union(coord, n)):
+            if isValid(temp_coord) and temp_coord in self.defect_set and union(coord, temp_coord):
                     return coord
         return None
         
@@ -126,13 +118,11 @@ class Simulation():
         Runs the simulation till completion
         """
         start = timeit.default_timer()
-        dis = Display()
+        # dis = Display()
         path = None
+        i = 0
         while path is None:
             coord = self.next_cycle()
-            print(self.parent_map)
-            print(self.group_reached_bottom)
-            print(self.group_reached_top)
-            dis.voxel_visualize(self.nodes, self.length, self.width, self.height)
+            # dis.voxel_visualize(self.nodes, self.length, self.width, self.height)
             path = self.unionSearch(coord)
         print(f"Simulation took {utils.convert_time(timeit.default_timer()-start)}. Cycles: {self.cycle}, Clock: {self.clock}")

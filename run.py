@@ -12,7 +12,7 @@ import utils
 if __name__ == "__main__":
     start = timeit.default_timer()
     runs = 1
-    interface_multipliers = [100000]
+    interface_multipliers = [1]
     heights = [5]
     total_num_simulations = runs*len(interface_multipliers)*len(heights)
     with tqdm(total=total_num_simulations) as pbar:
@@ -30,7 +30,7 @@ if __name__ == "__main__":
                         "bulkDiffusion": 0,
                         "bulkAnnihilation": 0
                     }
-                    sim = Simulation(3, 3, 3, k_values, interface_multiplier)
+                    sim = Simulation(350, 350, 5, k_values, interface_multiplier)
                     sim.run()
                     pbar.update(1)
 
