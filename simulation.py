@@ -4,10 +4,11 @@
 @contact: mail@chrisliu.io
 """
 #imports
-import Node
+from Node import Node
 import numpy as np
 import timeit
 import utils
+from Display import Display
 
 POS_DIAG = [(0,1,1), (0,-1,1), (1,0,1), (-1,0,1), (1,1,1), (-1,-1,1), (1,-1,1), (-1,1,1), (0,0,1), (0,1,0), (0,-1,0), (1,0,0), (-1,0,0), (1,1,0), (-1,-1,0), (1,-1,0), (-1,1,0), (0,1,-1), (0,-1,-1), (1,0,-1), (-1,0,-1), (1,1,-1), (-1,-1,-1), (1,-1,-1), (-1,1,-1), (0,0,-1)]
 
@@ -22,7 +23,7 @@ class Simulation():
         self.length = length
         self.width = width
         self.height = height
-        self.nodes = {}
+        self.nodes = {} #Maps coord (L,W,H) to Node
         self.parent_map = {}
         self.group_reached_top = dict()
         self.group_reached_bottom = dict()
@@ -42,10 +43,10 @@ class Simulation():
         for l in range(self.length):
             for w in range(self.width):
                 for h in range(self.height):
-                    coord = tuple(l,w,h) #Tuple of coordinates, format is (L,W,H)
+                    coord = tuple((l,w,h)) #Tuple of coordinates, format is (L,W,H)
                     temp = Node(coord, self.height)
                     self.nodes[coord] = temp
-                    self.k_values += temp.initialize_process()
+                    self.k_total += temp.initialize_process(self.k_values)
     
     def next_cycle(self):
         """
@@ -116,7 +117,7 @@ class Simulation():
 
         for n in neighbors:
             if n in self.parent_map:
-                if (union(coord, n))
+                if (union(coord, n)):
                     return coord
         return None
         
@@ -125,8 +126,13 @@ class Simulation():
         Runs the simulation till completion
         """
         start = timeit.default_timer()
+        dis = Display()
         path = None
         while path is None:
             coord = self.next_cycle()
+            print(self.parent_map)
+            print(self.group_reached_bottom)
+            print(self.group_reached_top)
+            dis.voxel_visualize(self.nodes, self.length, self.width, self.height)
             path = self.unionSearch(coord)
         print(f"Simulation took {utils.convert_time(timeit.default_timer()-start)}. Cycles: {self.cycle}, Clock: {self.clock}")

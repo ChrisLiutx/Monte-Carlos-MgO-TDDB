@@ -187,15 +187,18 @@ class Process(Node):
 class Display():
     def __init__(self):
         self.ax = plt.figure().add_subplot(projection="3d")
+        self.ax.set_box_aspect(aspect=(10,10,1))
 
     def voxel_visualize(self, tgrid):
         """
         Voxel visualization, might consider using grid view later
         """
         self.grid = [[[node.defect for node in layer]for layer in layers] for layers in tgrid]
-
+        with open("TESTOUTPUT.txt", "a") as f:
+            f.write(str(self.grid) + "\n")
+            f.close()
         self.ax.clear()
-        self.ax.voxels(np.array(self.grid), facecolors='#1f77b430', edgecolor='k', shade=False)
+        self.ax.voxels(np.array(self.grid), facecolors='#0277b430', shade=False)
         plt.pause(1)
 
     def show_path(self, tgrid, finalnode):

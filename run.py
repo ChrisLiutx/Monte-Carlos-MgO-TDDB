@@ -6,13 +6,13 @@
 #imports
 from tqdm import tqdm
 import timeit
-import Simulation
+from Simulation import Simulation
 import utils
 
 if __name__ == "__main__":
     start = timeit.default_timer()
     runs = 1
-    interface_multipliers = [1]
+    interface_multipliers = [100000]
     heights = [5]
     total_num_simulations = runs*len(interface_multipliers)*len(heights)
     with tqdm(total=total_num_simulations) as pbar:
@@ -26,11 +26,12 @@ if __name__ == "__main__":
                         "bottomGeneration": 1*interface_multiplier,
                         "bottomDiffusion": 0,
                         "bottomAnnihilation": 0,
-                        "bulkGeneration": 1*interface_multiplier,
+                        "bulkGeneration": 1,
                         "bulkDiffusion": 0,
                         "bulkAnnihilation": 0
                     }
-                    pass
+                    sim = Simulation(3, 3, 3, k_values, interface_multiplier)
+                    sim.run()
                     pbar.update(1)
 
     #Prints total runtime

@@ -4,7 +4,7 @@
 @contact: mail@chrisliu.io
 """
 #imports
-import Process
+from Process import Process
 
 class Node():
     """
@@ -13,9 +13,9 @@ class Node():
     def __init__(self, coord, max_height):
         self.coord = coord
         self.processes = []
-        if coord[3] == 0:
+        if coord[2] == 0:
             self.type = "bottom"
-        elif coord[3] == max_height-1:
+        elif coord[2] == max_height-1:
             self.type = "top"
         else:
             self.type = "bulk"
