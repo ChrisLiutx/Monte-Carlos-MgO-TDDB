@@ -193,9 +193,15 @@ class Display():
         """
         Voxel visualization, might consider using grid view later
         """
+        to_print = []
         self.grid = [[[node.defect for node in layer]for layer in layers] for layers in tgrid]
+        for l in range(50):
+            for w in range(50):
+                for h in range(5):
+                    if self.grid[l][w][h]:
+                        to_print.append(tuple((l,w,h)))
         with open("TESTOUTPUT.txt", "a") as f:
-            f.write(str(self.grid) + "\n")
+            f.write(str(to_print) + "\n")
             f.close()
         self.ax.clear()
         self.ax.voxels(np.array(self.grid), facecolors='#0277b430', shade=False)
