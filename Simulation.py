@@ -40,7 +40,7 @@ class Simulation():
 
     def generate_nodes(self):
         """
-        Generates nodes of the simulation
+        Generates nodes of the simulation, then initializes the processes.
         """
         for l in range(self.length):
             for w in range(self.width):
@@ -118,11 +118,11 @@ class Simulation():
         Runs the simulation till completion
         """
         start = timeit.default_timer()
-        # dis = Display()
+        # dis = Display() #Uncomment this and the one below to show display
         path = None
         i = 0
         while path is None:
             coord = self.next_cycle()
-            # dis.voxel_visualize(self.nodes, self.length, self.width, self.height)
+            # dis.voxel_visualize(self.nodes, self.length, self.width, self.height) #Uncomment this and the one Above to show display
             path = self.unionSearch(coord)
         print(f"Simulation took {utils.convert_time(timeit.default_timer()-start)}. Cycles: {self.cycle}, Clock: {self.clock}")
