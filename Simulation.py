@@ -113,13 +113,13 @@ class Simulation():
                     return coord
         return None
         
-    def run(self, demo=0, save_defect_data=False):
+    def run(self, demo=0, demo_delay=1, save_defect_data=False):
         """
         Runs the simulation till completion
         """
         start = timeit.default_timer()
         if demo == 1:
-            dis = Display()
+            dis = Display(demo_delay)
         path = None
         i = 0
         while path is None:

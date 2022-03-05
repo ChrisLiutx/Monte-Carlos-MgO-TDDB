@@ -18,6 +18,7 @@ if __name__ == "__main__":
     heights = [5] # List of height values. Use range() if you want a range of values
     k = 2.718281828 # Default k value
     demo = 0 # Set demo to 1 to turn on display
+    demo_delay = 0.5 #Time delay between cycles for Demo
     ############# PARAMETERS ###############
 
     total_num_simulations = runs*len(interface_multipliers)*len(heights)
@@ -37,7 +38,7 @@ if __name__ == "__main__":
                         "bulkAnnihilation": 0
                     }
                     sim = Simulation(5, 5, 5, k_values, interface_multiplier)
-                    sim.run(demo=demo)
+                    sim.run(demo=demo, demo_delay=demo_delay)
                     test = input("End: ") #TODO REMOVE THIS
                     pbar.update(1)
 
