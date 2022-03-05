@@ -113,16 +113,20 @@ class Simulation():
                     return coord
         return None
         
-    def run(self, end_path=False, save_defect_data=False):
+    def run(self, demo=0, save_defect_data=False):
         """
         Runs the simulation till completion
         """
         start = timeit.default_timer()
-        # dis = Display() #Uncomment this and the one below to show display
+        if demo == 1:
+            dis = Display()
         path = None
         i = 0
         while path is None:
             coord = self.next_cycle()
-            # dis.voxel_visualize(self.nodes, self.length, self.width, self.height) #Uncomment this and the one Above to show display
+            if demo == 1:
+                dis.voxel_visualize(self.nodes, self.length, self.width, self.height)
             path = self.unionSearch(coord)
         print(f"Simulation took {utils.convert_time(timeit.default_timer()-start)}. Cycles: {self.cycle}, Clock: {self.clock}")
+        if demo == 1:
+                dis.voxel_visualize(self.nodes, self.length, self.width, self.height)

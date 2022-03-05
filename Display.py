@@ -23,7 +23,7 @@ class Display():
 
         self.ax.clear()
         self.ax.voxels(np.array(self.grid), facecolors='#0277b430', edgecolor='k', shade=False)
-        plt.pause(0.2)
+        plt.pause(0.5)
 
     def show_path(self, tgrid, finalnode):
         pathgrid = [[[False for node in layer]for layer in layers] for layers in tgrid]
