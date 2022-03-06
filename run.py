@@ -24,9 +24,9 @@ if __name__ == "__main__":
 
     total_num_simulations = runs*len(interface_multipliers)*len(heights)
     with tqdm(total=total_num_simulations) as pbar:
-        for i in range(runs):
-            for height in heights:
-                for interface_multiplier in interface_multipliers:
+        for height in heights:
+            for interface_multiplier in interface_multipliers:
+                for i in range(runs):
                     k_values = {
                         "topGeneration": k*interface_multiplier,
                         "topDiffusion": 0,
