@@ -20,7 +20,7 @@ class Simulation():
     Simulation class
     """
 
-    def __init__(self, length=None, width=None, height=None, k_values=[], alpha=1):
+    def __init__(self, length=None, width=None, height=None, k_values=[], interface_multiplier=1):
         self.length = length
         self.width = width
         self.height = height
@@ -33,7 +33,7 @@ class Simulation():
         self.cycle = 0
         self.k_total = 0
         self.k_values = k_values
-        self.alpha = alpha
+        self.interface_multiplier = interface_multiplier
         self.num_defect = 0
         self.generate_nodes()
         print("\nSimulation initialized...")
@@ -113,6 +113,21 @@ class Simulation():
                     return coord
         return None
         
+    def generate_output(self, directory):
+        #time to failure, number of defective sites at failure, fraction of number of defective sites
+        #imul is interface multiplier
+        bulkgen_k = self.k_values["bulkGeneration"]
+        filename = f"{self.length}x{self.width}x{self.height}_k{bulkgen_k}_imul{self.interface_multiplier}"
+        fraction = self.num_defect/(self.length*self.width*self.height)
+        defects = []
+        for node in self.nodes.values():
+            coord = node.coord
+            if node.defect:
+                defects.append(coord)
+        content = f"{self.clock}, {self.num_defect}, {fraction}, {str(defects)}"
+        dimension = f"{self.length}, {self.width}, {self.height}"
+        utils.output(content, directory, filename, dimension=dimension)
+
     def run(self, demo=0, demo_delay=1, save_defect_data=False):
         """
         Runs the simulation till completion
