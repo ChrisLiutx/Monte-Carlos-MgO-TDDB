@@ -14,12 +14,13 @@ if __name__ == "__main__":
 
     ############# PARAMETERS ###############
     runs = 20 # Number of runs
-    interface_multipliers = [1, 5, 10, 15, 20] # List of interface multiplier values
-    heights = [5] # List of height values. Use range() if you want a range of values
+    length = width = 50
+    interface_multipliers = [1] # List of interface multiplier values
+    heights = range(3,11) # List of height values. Use range() if you want a range of values
     k = 2.718281828 # Default k value
     demo = 0 # Set demo to 1 to turn on display
     demo_delay = 0.5 #Time delay between cycles for Demo
-    directory = "/output/350/" #Folder for output, start and end with '/'
+    directory = "/output/50/varyHeight/" #Folder for output, start and end with '/'
     ############# PARAMETERS ###############
 
     total_num_simulations = runs*len(interface_multipliers)*len(heights)
@@ -38,7 +39,7 @@ if __name__ == "__main__":
                         "bulkDiffusion": 0,
                         "bulkAnnihilation": 0
                     }
-                    sim = Simulation(350, 350, 5, k_values, interface_multiplier)
+                    sim = Simulation(length, width, height, k_values, interface_multiplier)
                     sim.run(demo=demo, demo_delay=demo_delay)
                     sim.generate_output(directory=directory)
                     if demo:
