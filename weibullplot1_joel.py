@@ -57,7 +57,7 @@ def TTFplot(export, arr, label):
     return export
 
 cwd = os.path.dirname(__file__)
-location = cwd+"/output/50x50xthicknessesalpha5/"
+location = cwd+"/output/50x50xvaryheight_compare_w_exp2/"
 
 files = [location+str(f) for f in os.listdir(location) if f.endswith(".txt")]
 # files = [location+str(f) for f in os.listdir(location) if f.endswith(".txt")]
