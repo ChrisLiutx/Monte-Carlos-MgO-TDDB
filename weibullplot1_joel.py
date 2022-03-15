@@ -57,7 +57,7 @@ def TTFplot(export, arr, label):
     return export
 
 cwd = os.path.dirname(__file__)
-location = cwd+"/output/50x50xvaryheight_compare_w_exp2/"
+location = cwd+"/output/50x50x3_compare_w_exp/"
 
 files = [location+str(f) for f in os.listdir(location) if f.endswith(".txt")]
 # files = [location+str(f) for f in os.listdir(location) if f.endswith(".txt")]
@@ -71,7 +71,7 @@ for file in files:
     # plt.pause(1)
 plt.legend()
 plt.show()
-file_name='Weibull_constants_diagonals_vary_Height.xlsx'
+file_name='Weibull_constants_diagonals_3.xlsx'
 export_list = pd.DataFrame(export_list,columns =['file','gradient','t63%'])
 export_list.to_excel(file_name, index = False)
 

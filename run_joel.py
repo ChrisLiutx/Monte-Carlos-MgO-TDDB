@@ -16,12 +16,13 @@ if __name__ == "__main__":
     ############# PARAMETERS ###############
     runs = 50 # Number of runs
     interface_multipliers = [1] # List of interface multiplier values
-    heights = range(3,6) # List of height values. Use range() if you want a range of values
-    ks = [18.63894064, 10.39535949, 5.723795795, 3.109600152, 1.665838716, 0.879392215, 0.457136704, 0.233826187, 0.117589478, 0.058088349]
+    heights = [5] # List of height values. Use range() if you want a range of values
+    ks = np.arange(0.76,0.95,0.02)
+    ks = 1/(236*0.0002*np.power(ks,-27.15))
     # k = 1/(50*0.0002*0.90**-27.15) # Default k value
     demo = 0 # Set demo to 1 to turn on display
     demo_delay = 0.5 #Time delay between cycles for Demo
-    directory = "/output/50x50xvaryheight_compare_w_exp2/" #Folder for output, start and end with '/'
+    directory = "/output/50x50x5_compare_w_exp/" #Folder for output, start and end with '/'
     ############# PARAMETERS ###############
 
     total_num_simulations = runs*len(interface_multipliers)*len(heights)*len(ks)
